@@ -1,0 +1,9 @@
+(ns planets-api.main
+    (:require [compojure.handler :as handler]
+              [ring.middleware.json :as middleware]
+              [planets-api.routes :as routes]))
+
+(def app
+    (-> (handler/api routes/app-routes)
+        (middleware/wrap-json-body)
+        (middleware/wrap-json-response)))
