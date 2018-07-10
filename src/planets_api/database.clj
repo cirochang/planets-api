@@ -4,7 +4,8 @@
             [monger.core :as mg]
             [monger.collection :as mc]
             [monger.query :as query]
-            [monger.operators :refer [$in $set]]))
+            [monger.operators :refer [$in $set]])
+  (:import org.bson.types.ObjectId))
 
 (def db (mg/get-db (mg/connect) "planets-api"))
 
@@ -42,4 +43,9 @@
 (defn get-planet-by-id
   "Get a planet by id"
   [planet-id]
-  (mc/find-one-as-map db "planets" {:_id planet-id}))
+  (mc/find-map-by-id db "planets" (ObjectId. planet-id)))
+
+(defn remove-planet-by-id
+  "Remove a planet by id"
+  [planet-id]
+  (mc/remove-by-id db "planets" planet-id))

@@ -46,3 +46,9 @@
   [planet-id]
   (let [planet (database/get-planet-by-id planet-id)]
     (response planet)))
+
+(defn remove-planet-by-id
+  "Remove the given planet by id."
+  [planet-id]
+  (database/remove-planet-by-id planet-id)
+  (response "ok"))
