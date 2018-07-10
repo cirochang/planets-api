@@ -3,7 +3,11 @@
   :url "https://gitlab.com/cirochang/planets-api/"
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [compojure "1.3.4"]
-                 [ring/ring-json "0.1.2"]]
+                 [ring/ring-json "0.1.2"]
+                 [com.novemberain/monger "3.1.0"]
+                 [clj-http "3.9.0"]
+                 [prismatic/schema "1.1.7"]
+                 [cheshire "5.6.1"]]
   :plugins [[lein-ring "0.12.3"]]
   :ring {:handler planets-api.main/app}
   :target-path "target/%s"
