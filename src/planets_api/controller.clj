@@ -40,3 +40,9 @@
           (database/get-all-planets)
           (database/get-planets-by-name search))]
     (response planets)))
+
+(defn get-planet-by-id
+  "Return the given planet by id."
+  [planet-id]
+  (let [planet (database/get-planet-by-id planet-id)]
+    (response planet)))

@@ -6,4 +6,5 @@
 (defroutes app-routes
     (POST "/planets" {body :body} (controller/create-planet body))
     (GET "/planets" [search] (controller/get-list-planets search))
+    (GET "/planets/:planet-id" [planet-id] (controller/get-planet-by-id planet-id))
     (route/not-found "Not Found"))

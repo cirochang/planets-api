@@ -11,7 +11,7 @@
 (defn create-db
   "Create index in and unique keys in name on planet doc."
   []
-  (mc/create-index db "planets" ["name"] {:unique true}))
+  (mc/create-index db "planets" ["name"]))
 
 (defn destroy-db
   "Destroy database."
@@ -38,3 +38,8 @@
   [name]
   (query/with-collection db "planets"
     (query/find {:name name})))
+
+(defn get-planet-by-id
+  "Get a planet by id"
+  [planet-id]
+  (mc/find-one-as-map db "planets" {:_id planet-id}))
