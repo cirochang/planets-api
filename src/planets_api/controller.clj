@@ -34,7 +34,9 @@
       (status (response (str (.getMessage e))) 400))))
 
 (defn get-list-planets
-  "Return a list of all planets."
-  []
-  (let [planets (database/get-all-planets)]
+  "Return a list of planets."
+  [search]
+  (let [planets (if (clojure.string/blank? search)
+          (database/get-all-planets)
+          (database/get-planets-by-name search))]
     (response planets)))

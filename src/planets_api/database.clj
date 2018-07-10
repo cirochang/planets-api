@@ -32,3 +32,9 @@
   "Get all planets from db."
   []
   (mc/find-maps db "planets"))
+
+(defn get-planets-by-name
+  "Get planets by name"
+  [name]
+  (query/with-collection db "planets"
+    (query/find {:name name})))
