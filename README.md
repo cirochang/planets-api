@@ -23,7 +23,6 @@ lein ring uberjar
 ```
 
 ## How to run
-
 ```
 java -jar target/uberjar/planets-api-1.0.0-standalone.jar
 ```
@@ -37,3 +36,31 @@ lein ring server-headless
 ```
 lein test
 ```
+
+## Project strucutre
+
+    .
+    ├── src                             # Project source folder
+    │   └── planets_api                 # Main namespace project folder
+    │       ├── controllers             # Folder for control the requests
+    │       │   └── planets_ctl.clj     # Responsible for planets controller
+    |       ├── models                  # Folder for write and read data and validations
+    │       │   └── planets_md.clj      # Responsible for planets model
+    │       ├── utils                   # Folder for useful functions
+    │       │   ├── database.cj         # Responsible for communicate with database
+    │       │   └── swapi.clj           # Responsible for communicate with swapi.co
+    |       ├── main.clj                # Responsible for startup the api
+    │       └── routes.js               # Responsible for indicate the endpoints of the api
+    ├── test                            # Test source folder
+    │   └── test_planets_api            # Main namespace project test folder
+    │       ├── e2e                     # Folder for end to end tests
+    │       │   ├── not_found_test.clj  # Responsible for test 404 endpoints requests
+    │       │   └── planets_test.clj    # Responsible for test planets endpoints requests
+    │       ├── helpers                 # Folder to help the tests source files
+    │       │   ├── factories.cj        # Give some objects prepare to use in tests 
+    │       │   ├── fixture.cj          # Give some functions to prepare each test
+    │       │   └── utils.clj           # Give some useful functions to use in tests
+    │       └── units                   # Folder for units tests
+    │           └── models              # Folder for test the models folder
+    │               └── planets_md.clj  # Responsible for test the planets_ctl.clj file
+    └── project.clj                     # Project setup file
