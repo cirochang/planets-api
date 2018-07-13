@@ -22,7 +22,7 @@
   (let [planets (if (clojure.string/blank? search)
           (planet-md/get-all-planets)
           (planet-md/get-planets-by-name search))]
-    (response planets)))
+    (response {:planets planets})))
 
 (defn get-planet-by-id
   "Return the given planet by id."

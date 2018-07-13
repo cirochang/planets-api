@@ -26,8 +26,8 @@
   "Add num films in planet and insert in db."
   [planet]
   (let [num-films (get-total-films-by-planet planet)
-        planet-with-films (merge planet {:num_films num-films})])
-    (db/insert-doc "planets" planet))
+        planet-with-films (merge planet {:num_films num-films})]
+    (db/insert-doc "planets" planet-with-films)))
 
 (defn get-all-planets
   "Get all planets from db"
