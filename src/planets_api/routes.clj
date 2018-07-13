@@ -5,7 +5,7 @@
 
 (defroutes app-routes
   (POST "/planets" {body :body} (planet-ctl/create-planet body))
-  (GET "/planets" [search] (planet-ctl/get-list-planets search))
+  (GET "/planets" [name] (planet-ctl/get-list-planets name))
   (GET "/planets/:planet-id" [planet-id] (planet-ctl/get-planet-by-id planet-id))
   (DELETE "/planets/:planet-id" [planet-id] (planet-ctl/remove-planet-by-id planet-id))
   (route/not-found "Not Found"))

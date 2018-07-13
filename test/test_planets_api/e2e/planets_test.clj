@@ -1,7 +1,7 @@
-(ns test-planets-api.e2e.planets_test
+(ns test-planets-api.e2e.planets-test
   (:require [clojure.test :refer :all]
             [test-planets-api.helpers.fixtures :refer [tmp-db-init tmp-db-clean]]
-            [test-planets-api.helpers.requests :refer [make-request]]
+            [test-planets-api.helpers.utils :refer [make-request submap?]]
             [test-planets-api.helpers.factories :as factory]
             [cheshire.core :refer [generate-string parse-string]]))
 
@@ -54,9 +54,125 @@
       (is (= (:status response-E) 400))
       (is (= (:status response-F) 400)))))
 
-(deftest list-planets
-  (testing "test list planets."
+(deftest get-list-planets
+  (testing "test get list of NONE planets."
+    (let [response (make-request :get "/planets")
+          res-body (parse-string (:body response))
+          res-planets (get res-body "planets")]
+      (is (= (:status response) 200))
+      (is (= (count res-planets) 0))))
+  (testing "test get list of ONE planet."
     (make-request :post "/planets" factory/planet-A)
-    (let [response-A (make-request :get "/planets")]
-;      (is (= (:status response-A) 200))
-;      (is (= factory/planet-A (parse-string (:body response-A)))))))
+    (let [response (make-request :get "/planets")
+          res-body (parse-string (:body response))
+          res-planets (get res-body "planets")]
+      (is (= (:status response) 200))
+      (is (= (count res-planets) 1))
+      (is (some #(submap? factory/planet-A %) res-planets))))
+  (testing "test get list of TWO planets." 
+    (make-request :post "/planets" factory/planet-B)
+    (let [response (make-request :get "/planets")
+          res-body (parse-string (:body response))
+          res-planets (get res-body "planets")]
+      (is (= (:status response) 200))
+      (is (= (count res-planets) 2))
+      (is (some #(submap? factory/planet-A %) res-planets))
+      (is (some #(submap? factory/planet-B %) res-planets))))
+  (testing "test get list of 10 planets." 
+    (make-request :post "/planets" factory/planet-C)
+    (make-request :post "/planets" factory/planet-D)
+    (make-request :post "/planets" factory/planet-E)
+    (make-request :post "/planets" factory/planet-F)
+    (make-request :post "/planets" factory/planet-G)
+    (make-request :post "/planets" factory/planet-H)
+    (make-request :post "/planets" factory/planet-I)
+    (make-request :post "/planets" factory/planet-J)
+    (let [response (make-request :get "/planets")
+          res-body (parse-string (:body response))
+          res-planets (get res-body "planets")]
+      (is (= (:status response) 200))
+      (is (= (count res-planets) 10))
+      (is (some #(submap? factory/planet-A %) res-planets))
+      (is (some #(submap? factory/planet-B %) res-planets))
+      (is (some #(submap? factory/planet-C %) res-planets))
+      (is (some #(submap? factory/planet-D %) res-planets))
+      (is (some #(submap? factory/planet-E %) res-planets))
+      (is (some #(submap? factory/planet-F %) res-planets))
+      (is (some #(submap? factory/planet-G %) res-planets))
+      (is (some #(submap? factory/planet-H %) res-planets))
+      (is (some #(submap? factory/planet-I %) res-planets))
+      (is (some #(submap? factory/planet-J %) res-planets)))))
+
+(deftest get-planets-by-id
+  (make-request :post "/planets" factory/planet-A)
+  (make-request :post "/planets" factory/planet-B)
+  (make-request :post "/planets" factory/planet-C)
+  (make-request :post "/planets" factory/planet-D)
+  (testing "test get planet by wrong id."
+    (let [response (make-request :get "/planets/foobar")]
+      (is (= (:status response) 404)))
+    (let [response (make-request :get "/planets/123456")]
+      (is (= (:status response) 404))))  
+  (testing "test get planet by valid id."
+    (let [response (make-request :get "/planets")
+          res-body (parse-string (:body response))
+          res-planets (get res-body "planets")
+          res-planet-A (first (filter #(submap? factory/planet-A %) res-planets))
+          response-B (make-request :get (str "/planets/" (get res-planet-A "_id")))
+          res-body-B (parse-string (:body response-B))]
+      (is (= (:status response-B) 200))
+      (is (= res-planet-A res-body-B)))))
+
+(deftest get-planets-by-name
+  (make-request :post "/planets" factory/planet-A)
+  (make-request :post "/planets" factory/planet-B)
+  (make-request :post "/planets" factory/planet-C)
+  (make-request :post "/planets" factory/planet-D)
+  (testing "test get planet with wrong names."
+    (let [response (make-request :get "/planets?name=foobar")
+          res-body (parse-string (:body response))
+          res-planets (get res-body "planets")]
+      (is (= (:status response) 200))
+      (is (= (count res-planets) 0)))
+    (let [response (make-request :get "/planets?name=123456")
+          res-body (parse-string (:body response))
+          res-planets (get res-body "planets")]
+      (is (= (:status response) 200))
+      (is (= (count res-planets) 0))))
+  (testing "test get planet by valid name."
+    (let [response (make-request :get (str "/planets?name=" (get factory/planet-A "name")))
+          res-body (parse-string (:body response))
+          res-planets (get res-body "planets")]
+      (is (= (:status response) 200))
+      (is (= (count res-planets) 1))
+      (is (some #(submap? factory/planet-A %) res-planets)))
+    (let [response (make-request :get (str "/planets?name=" (get factory/planet-C "name")))
+          res-body (parse-string (:body response))
+          res-planets (get res-body "planets")]
+      (is (= (:status response) 200))
+      (is (= (count res-planets) 1))
+      (is (some #(submap? factory/planet-C %) res-planets)))))
+
+(deftest remove-planet-by-id
+  (make-request :post "/planets" factory/planet-A)
+  (make-request :post "/planets" factory/planet-B)
+  (make-request :post "/planets" factory/planet-C)
+  (make-request :post "/planets" factory/planet-D)
+  (testing "test remove planet with wrong ids."
+    (let [response (make-request :delete "/planets/foobar")]
+      (is (= (:status response) 404)))
+    (let [response (make-request :delete "/planets/123456")]
+      (is (= (:status response) 404))))  
+  (testing "test remove planet by valid id."
+    (let [response (make-request :get "/planets")
+          res-body (parse-string (:body response))
+          res-planets (get res-body "planets")
+          res-planet-A (first (filter #(submap? factory/planet-A %) res-planets))
+          response-B (make-request :delete (str "/planets/" (get res-planet-A "_id")))]
+      (is (= (:status response-B) 200)))
+    (let [response (make-request :get "/planets")
+          res-body (parse-string (:body response))
+          res-planets (get res-body "planets")]
+      (is (= (:status response) 200))
+      (is (= (count res-planets) 3))
+      (is (not (some #(submap? factory/planet-A %) res-planets))))))

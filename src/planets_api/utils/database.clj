@@ -26,26 +26,26 @@
   
 (defn insert-doc
   "Insert a document in db."
-  [model doc]
-  (mc/insert db model doc))
+  [coll doc]
+  (mc/insert db coll doc))
   
 (defn get-all-docs
   "Get all planets from db."
-  [model]
-  (mc/find-maps db model))
+  [coll]
+  (mc/find-maps db coll))
   
 (defn find-docs
   "Find docs by query dict"
-  [model find-query]
-  (query/with-collection db model
+  [coll find-query]
+  (query/with-collection db coll
     (query/find find-query)))
   
 (defn get-doc-by-id
   "Get a doc by id"
-  [model id]
-  (mc/find-map-by-id db model (ObjectId. id)))
+  [coll id]
+  (mc/find-map-by-id db coll (ObjectId. id)))
   
 (defn remove-doc-by-id
   "Remove a doc by id"
-  [model id]
-  (mc/remove-by-id db model id))
+  [coll id]
+  (mc/remove-by-id db coll (ObjectId. id)))
