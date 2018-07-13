@@ -64,3 +64,92 @@ lein test
     │           └── models              # Folder for test the models folder
     │               └── planets_md.clj  # Responsible for test the planets_ctl.clj file
     └── project.clj                     # Project setup file
+
+
+## The solution
+
+When the software runs, it creates a webserver on port 3000 and creates a database called "planets-api" with some properties.
+
+The application creates the following endpoints:
+
+#### POST /planets
+
+Add a planet to the database.
+
+Example input:
+```json
+{
+  "name": "Alderaan",
+  "climate": "temperate",
+  "terraint": "glasslands, mountains"
+}
+```
+
+Example output:
+```
+ok
+```
+
+#### GET /planets
+
+Get a list of all planets or a planet by name.
+
+Query Strings:
+```
+name={planet_name}
+```
+OBS: `planet_name` is case sensitive. 
+
+Example output:
+```json
+{
+  "planets": [
+    {
+      "_id": "507f1f77bcf86cd799439011",
+      "name": "Alderaan",
+      "climate": "temperate",
+      "terraint": "glasslands, mountains",
+      "films": 2
+    },
+    {
+      "_id": "607f1f77bcf86cd799439012",
+      "name": "Yavin IV",
+      "climate": "temperate, tropical",
+      "terraint": "jungle, rainforests",
+      "films": 1
+    },
+    {
+      "_id": "707f1f77bcf86cd799439013",
+      "name": "Hoth",
+      "climate": "frozen",
+      "terraint": "tundra, ice caves, mountain ranges",
+      "films": 1
+    }
+  ]
+}
+```
+
+#### GET /planets/{planet_id}
+
+Get a planet by id. 
+
+Example output:
+```json
+{
+  "_id": "507f1f77bcf86cd799439011",
+  "name": "Alderaan",
+  "climate": "temperate",
+  "terraint": "glasslands, mountains",
+  "films": 2
+}
+```
+
+
+#### DELETE /planets/{planet_id
+
+Delete a planet by id. 
+
+Example output:
+```
+ok
+```
