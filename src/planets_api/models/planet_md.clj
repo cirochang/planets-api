@@ -47,4 +47,4 @@
 (defn remove-planet-by-id
   "Remove planet from db by id"
   [planet-id]
-  (db/remove-doc-by-id "planets" [planet-id]))
+  (db/remove-doc-by-id "planets" planet-id))
