@@ -23,6 +23,13 @@ lein ring uberjar
 ```
 
 ## How to run
+
+Start the mongo service
+```
+sudo service mongod start
+```
+
+Start the planets-api service
 ```
 java -jar target/uberjar/planets-api-1.0.0-standalone.jar
 ```
