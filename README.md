@@ -152,7 +152,7 @@ Example output:
 ```
 
 
-#### DELETE /planets/{planet_id
+#### DELETE /planets/{planet_id}
 
 Delete a planet by id. 
 
