@@ -14,7 +14,7 @@ To see the enunciation of the proposed exercise click [here](/resources/exercise
 Clone the repository and enter in the project folder
 ```
 git clone git@gitlab.com:cirochang/planets-api.git
-cd job-queues
+cd planets-api
 ```
 
 Build the project
